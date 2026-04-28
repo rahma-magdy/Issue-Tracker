@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import { pgTable, serial, text, timestamp, pgEnum } from 'drizzle-orm/pg-core'
 
 export const statusEnum = pgEnum('status', [
@@ -6,6 +7,7 @@ export const statusEnum = pgEnum('status', [
   'in_progress',
   'done',
 ])
+
 export const priorityEnum = pgEnum('priority', ['low', 'medium', 'high'])
 
 export const issues = pgTable('issues', {
@@ -14,9 +16,9 @@ export const issues = pgTable('issues', {
   description: text('description'),
   status: statusEnum('status').default('backlog').notNull(),
   priority: priorityEnum('priority').default('medium').notNull(),
-  userId: text('user_id').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  userId: text('user_id').notNull(),
 })
 
 export const users = pgTable('users', {
@@ -25,3 +27,27 @@ export const users = pgTable('users', {
   password: text('password').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
+
+export const issuesRelations = relations(issues, ({ one }) => ({
+  user: one(users, {
+    fields: [issues.userId],
+    references: [users.id],
+  }),
+}))
+
+export const usersRelations = relations(users, ({ many }) => ({
+  issues: many(issues),
+}))
+
+export const ISSUE_STATUS = {
+  backlog: { label: 'Backlog', value: 'backlog' },
+  todo: { label: 'Todo', value: 'todo' },
+  in_progress: { label: 'In Progress', value: 'in_progress' },
+  done: { label: 'Done', value: 'done' },
+}
+
+export const ISSUE_PRIORITY = {
+  low: { label: 'Low', value: 'low' },
+  medium: { label: 'Medium', value: 'medium' },
+  high: { label: 'High', value: 'high' },
+}

@@ -1,6 +1,51 @@
+'use client'
+
+import { useActionState } from 'react'
+import { useRouter } from 'next/navigation'
+import Button from '@/app/components/ui/Button'
+import {
+  Form,
+  FormGroup,
+  FormLabel,
+  FormInput,
+  FormError,
+} from '@/app/components/ui/Form'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
+import { signIn } from '@/app/actions/auth'
+
+const initialState = {
+  success: false,
+  message: '',
+  errors: undefined,
+}
 
 export default function SignInPage() {
+  const router = useRouter()
+
+  const [state, formAction, isPending] = useActionState(
+    async (prevState, formData) => {
+      try {
+        const result = await signIn(formData)
+
+        if (result.success) {
+          toast.success('Signed in successfully')
+          router.push('/dashboard')
+          router.refresh()
+        }
+
+        return result
+      } catch (err) {
+        return {
+          success: false,
+          message: err.message || 'An error occurred',
+          errors: undefined,
+        }
+      }
+    },
+    initialState,
+  )
+
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50 dark:bg-[#121212]">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -14,7 +59,53 @@ export default function SignInPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white dark:bg-[#1A1A1A] py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-100 dark:border-dark-border-subtle">
-          <div className="mt-6 text-center">
+          <Form action={formAction} className="space-y-6">
+            {state?.message && !state.success && (
+              <FormError>{state.message}</FormError>
+            )}
+
+            <FormGroup>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormInput
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                disabled={isPending}
+                className={state?.errors?.email ? 'border-red-500' : ''}
+              />
+              {state?.errors?.email && (
+                <p className="text-sm text-red-500">{state.errors.email[0]}</p>
+              )}
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormInput
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                disabled={isPending}
+                className={state?.errors?.password ? 'border-red-500' : ''}
+              />
+              {state?.errors?.password && (
+                <p className="text-sm text-red-500">
+                  {state.errors.password[0]}
+                </p>
+              )}
+            </FormGroup>
+
+            <div>
+              <Button type="submit" className="w-full" isLoading={isPending}>
+                Sign in
+              </Button>
+            </div>
+          </Form>
+
+          <div className="mt-6 text-center border-t border-gray-100 dark:border-gray-800 pt-6">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Don&apos;t have an account?{' '}
               <Link

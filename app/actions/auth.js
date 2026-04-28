@@ -39,7 +39,7 @@ export const signIn = async (formData) => {
     if (!validationResult.success) {
       return {
         success: false,
-        message: 'Validation failed',
+        // message: 'Validation failed',
         errors: validationResult.error.flatten().fieldErrors,
       }
     }
@@ -85,7 +85,6 @@ export const signIn = async (formData) => {
 }
 
 export const signUp = async (formData) => {
-  console.log('here from the server')
   try {
     const data = {
       email: formData.get('email'),
@@ -98,7 +97,7 @@ export const signUp = async (formData) => {
     if (!validationResult.success) {
       return {
         success: false,
-        message: 'Validation faild',
+        // message: '',
         errors: validationResult.error.flatten().fieldErrors,
       }
     }
