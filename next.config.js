@@ -1,7 +1,5 @@
 const nextConfig = {
-  experimental: {
-    dynamicIO: true,
-  },
+  experimental: {},
 }
 
 export default nextConfig
