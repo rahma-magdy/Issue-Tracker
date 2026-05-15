@@ -2,6 +2,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import NewIssue from '@/app/components/NewIssue'
+export const dynamic = 'force-dynamic'
 
 export default async function NewIssuePage() {
   return (
