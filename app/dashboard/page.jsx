@@ -5,7 +5,7 @@ import { PlusIcon } from 'lucide-react'
 import Badge from '../components/ui/Badge'
 import { formatRelativeTime } from '@/lib/utils'
 import { ISSUE_STATUS, ISSUE_PRIORITY } from '@/db/schema'
-
+export const dynamic = 'force-dynamic'
 export default async function DashboardPage() {
   await getCurrentUser()
   const issues = await getIssues()
