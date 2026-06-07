@@ -12,12 +12,12 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold">Issues</h1>
-        <Link href="/issues/new">
+        <Link href="/issues/new" className="w-full sm:w-auto">
           <Button>
-            <span className="flex items-center">
-              <PlusIcon size={18} className="mr-2" />
+            <span className="flex items-center justify-center gap-2">
+              <PlusIcon size={18} />
               New Issue
             </span>
           </Button>
@@ -26,36 +26,48 @@ export default async function DashboardPage() {
 
       {issues.length > 0 ? (
         <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-dark-border-default bg-white dark:bg-dark-high shadow-sm">
-          <div className="grid grid-cols-12 gap-4 px-6 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-dark-elevated border-b border-gray-200 dark:border-dark-border-default">
+          <div className="hidden grid-cols-12 gap-4 border-b border-gray-200 bg-gray-50 px-6 py-3 text-sm font-medium text-gray-500 dark:border-dark-border-default dark:bg-dark-elevated dark:text-gray-400 lg:grid">
             <div className="col-span-5">Title</div>
             <div className="col-span-2">Status</div>
             <div className="col-span-2">Priority</div>
             <div className="col-span-3">Created</div>
           </div>
 
-          <div className="divide-y divide-gray-200 dark:divide-dark-border-default">
+          <div className="space-y-3 p-3 lg:space-y-0 lg:p-0 lg:divide-y lg:divide-gray-200 lg:dark:divide-dark-border-default">
             {issues.map((issue) => (
               <Link
                 key={issue.id}
                 href={`/issues/${issue.id}`}
-                className="block hover:bg-gray-50 dark:hover:bg-dark-elevated transition-colors"
+                className="block rounded-lg border border-gray-200 bg-white transition-colors hover:bg-gray-50 dark:border-dark-border-default dark:bg-dark-high dark:hover:bg-dark-elevated lg:rounded-none lg:border-0 lg:bg-transparent"
               >
-                <div className="grid grid-cols-12 gap-4 px-6 py-4 items-center">
-                  <div className="col-span-5 font-medium truncate">
-                    {issue.title}
+                <div className="grid gap-3 p-4 lg:grid-cols-12 lg:gap-4 lg:px-6 lg:py-4 lg:items-center">
+                  <div className="min-w-0 lg:col-span-5">
+                    <div className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 lg:hidden">
+                      Title
+                    </div>
+                    <div className="font-medium truncate">{issue.title}</div>
                   </div>
-                  <div className="col-span-2">
+                  <div className="flex items-center justify-between gap-3 lg:block lg:col-span-2">
+                    <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 lg:hidden">
+                      Status
+                    </span>
                     <Badge status={issue.status}>
                       {ISSUE_STATUS[issue.status].label}
                     </Badge>
                   </div>
-                  <div className="col-span-2">
+                  <div className="flex items-center justify-between gap-3 lg:block lg:col-span-2">
+                    <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 lg:hidden">
+                      Priority
+                    </span>
                     <Badge priority={issue.priority}>
                       {ISSUE_PRIORITY[issue.priority].label}
                     </Badge>
                   </div>
-                  <div className="col-span-3 text-sm text-gray-500 dark:text-gray-400">
-                    {formatRelativeTime(new Date(issue.createdAt))}
+                  <div className="flex items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400 lg:block lg:col-span-3">
+                    <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 lg:hidden">
+                      Created
+                    </span>
+                    <span>{formatRelativeTime(new Date(issue.createdAt))}</span>
                   </div>
                 </div>
               </Link>
