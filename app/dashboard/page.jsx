@@ -25,53 +25,47 @@ export default async function DashboardPage() {
       </div>
 
       {issues.length > 0 ? (
-        <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-dark-border-default bg-white dark:bg-dark-high shadow-sm">
-          <div className="hidden grid-cols-12 gap-4 border-b border-gray-200 bg-gray-50 px-6 py-3 text-sm font-medium text-gray-500 dark:border-dark-border-default dark:bg-dark-elevated dark:text-gray-400 lg:grid">
-            <div className="col-span-5">Title</div>
-            <div className="col-span-2">Status</div>
-            <div className="col-span-2">Priority</div>
-            <div className="col-span-3">Created</div>
-          </div>
+        <div className="overflow-hidden rounded-lg border border-gray-250 dark:border-dark-border-default bg-white dark:bg-dark-high shadow-sm">
+          <div className="w-full overflow-x-auto scrollbar-thin">
+            <div className="min-w-[550px]">
+              {/* Header */}
+              <div className="grid grid-cols-12 gap-4 border-b border-gray-200 bg-gray-50 px-6 py-3 text-sm font-semibold text-gray-500 dark:border-dark-border-default dark:bg-dark-elevated dark:text-gray-400">
+                <div className="col-span-5">Title</div>
+                <div className="col-span-2">Status</div>
+                <div className="col-span-2">Priority</div>
+                <div className="col-span-3">Created</div>
+              </div>
 
-          <div className="space-y-3 p-3 lg:space-y-0 lg:p-0 lg:divide-y lg:divide-gray-200 lg:dark:divide-dark-border-default">
-            {issues.map((issue) => (
-              <Link
-                key={issue.id}
-                href={`/issues/${issue.id}`}
-                className="block rounded-lg border border-gray-200 bg-white transition-colors hover:bg-gray-50 dark:border-dark-border-default dark:bg-dark-high dark:hover:bg-dark-elevated lg:rounded-none lg:border-0 lg:bg-transparent"
-              >
-                <div className="grid gap-3 p-4 lg:grid-cols-12 lg:gap-4 lg:px-6 lg:py-4 lg:items-center">
-                  <div className="min-w-0 lg:col-span-5">
-                    <div className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 lg:hidden">
-                      Title
+              {/* Rows */}
+              <div className="divide-y divide-gray-150 dark:divide-dark-border-default">
+                {issues.map((issue) => (
+                  <Link
+                    key={issue.id}
+                    href={`/issues/${issue.id}`}
+                    className="block transition-colors hover:bg-gray-50 dark:hover:bg-dark-elevated/40"
+                  >
+                    <div className="grid grid-cols-12 gap-4 px-6 py-3.5 items-center">
+                      <div className="col-span-5 min-w-0 pr-4">
+                        <div className="font-medium truncate text-gray-900 dark:text-gray-100">{issue.title}</div>
+                      </div>
+                      <div className="col-span-2 flex items-center">
+                        <Badge status={issue.status}>
+                          {ISSUE_STATUS[issue.status].label}
+                        </Badge>
+                      </div>
+                      <div className="col-span-2 flex items-center">
+                        <Badge priority={issue.priority}>
+                          {ISSUE_PRIORITY[issue.priority].label}
+                        </Badge>
+                      </div>
+                      <div className="col-span-3 text-sm text-gray-500 dark:text-gray-400">
+                        {formatRelativeTime(new Date(issue.createdAt))}
+                      </div>
                     </div>
-                    <div className="font-medium truncate">{issue.title}</div>
-                  </div>
-                  <div className="flex items-center justify-between gap-3 lg:block lg:col-span-2">
-                    <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 lg:hidden">
-                      Status
-                    </span>
-                    <Badge status={issue.status}>
-                      {ISSUE_STATUS[issue.status].label}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between gap-3 lg:block lg:col-span-2">
-                    <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 lg:hidden">
-                      Priority
-                    </span>
-                    <Badge priority={issue.priority}>
-                      {ISSUE_PRIORITY[issue.priority].label}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400 lg:block lg:col-span-3">
-                    <span className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 lg:hidden">
-                      Created
-                    </span>
-                    <span>{formatRelativeTime(new Date(issue.createdAt))}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       ) : (
